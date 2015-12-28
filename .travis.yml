@@ -20,8 +20,6 @@ env:
   - TOXENV=py27
   - TOXENV=py26
   - TOXENV=pypy
-  - TOXENV=pep8
-
 
 # command to run tests, e.g. python setup.py test
 script:
