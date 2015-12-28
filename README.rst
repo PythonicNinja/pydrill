@@ -2,9 +2,6 @@
 pydrill
 ===============================
 
-.. image:: https://img.shields.io/pypi/v/pydrill.svg
-        :target: https://pypi.python.org/pypi/pydrill
-
 .. image:: https://img.shields.io/travis/PythonicNinja/pydrill.svg
         :target: https://travis-ci.org/PythonicNinja/pydrill
 
