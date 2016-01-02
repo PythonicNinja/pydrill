@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
+from setuptools import find_packages
 try:
     from setuptools import setup
 except ImportError:
@@ -34,20 +34,19 @@ setup(
     author="Wojciech Nowak",
     author_email='mail@pythonic.ninja',
     url='https://github.com/PythonicNinja/pydrill',
-    packages=[
-        'pydrill',
-    ],
-    package_dir={'pydrill':
-                 'pydrill'},
+    packages=find_packages(
+        where='.',
+        exclude=('test_*', )
+    ),
     include_package_data=True,
     install_requires=requirements,
-    license="ISCL",
+    license="MIT",
     zip_safe=False,
     keywords='pydrill',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: ISC License (ISCL)',
+        'License :: MIT Approved :: MIT License (MIT)',
         'Natural Language :: English',
         "Programming Language :: Python :: 2",
         'Programming Language :: Python :: 2.6',
