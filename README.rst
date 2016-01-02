@@ -9,6 +9,9 @@ pydrill
         :target: https://readthedocs.org/projects/pydrill/?badge=latest
         :alt: Documentation Status
 
+.. image:: https://coveralls.io/repos/PythonicNinja/pydrill/badge.svg?branch=master&service=github
+  :target: https://coveralls.io/github/PythonicNinja/pydrill?branch=master
+
 
 Python Driver for `Apache Drill <https://drill.apache.org/>`_.
 
@@ -24,6 +27,12 @@ Features
 * Mapping Results to internal python types,
 * Compatibility with Pandas data frame,
 
+Installation
+------------
+::
+
+    pip install git+git://github.com/PythonicNinja/pydrill.git
+
 Sample usage
 ------------
 ::
@@ -32,7 +41,8 @@ Sample usage
     
     drill = PyDrill(host='localhost', port=8047)
     
-    print drill.is_active()
+    if not drill.is_active():
+        raise ImproperlyConfigured('Please run Drill first')
     
     yelp_reviews = drill.query('''
       SELECT * FROM
@@ -41,4 +51,4 @@ Sample usage
     ''')
     
     for result in yelp_reviews:
-        print result['type'], result['date']
+        print("%s: %s" %(result['type'], result['date']))
