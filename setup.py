@@ -15,11 +15,15 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    # TODO: put package requirements here
+    'requests',
 ]
 
 test_requirements = [
-    # TODO: put package test requirements here
+    'responses',
+    'pytest',
+    'coverage',
+    'responses',
+    'coverage',
 ]
 
 setup(
