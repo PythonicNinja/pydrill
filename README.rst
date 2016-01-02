@@ -31,7 +31,7 @@ Installation
 ------------
 ::
 
-    pip install pip install git+git://github.com/PythonicNinja/pydrill.git
+    pip install git+git://github.com/PythonicNinja/pydrill.git
 
 Sample usage
 ------------
