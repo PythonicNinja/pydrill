@@ -2,6 +2,7 @@
 
 from pydrill.transport import Transport
 from pydrill.client.result import ResultQuery
+from pydrill.client.metricresultquery import MetricResultQuery
 from pydrill.exceptions import QueryError
 from pydrill.connection.requests_conn import RequestsHttpConnection
 
@@ -20,6 +21,9 @@ class PyDrill(object):
 
     def perform_request(self, method, url, params=None, body=None):
         return ResultQuery(*self.transport.perform_request(method, url, params, body))
+
+    def perform_metric_request(self, method, url, params=None, body=None):
+        return MetricResultQuery(*self.transport.perform_request(method, url, params, body))
 
     def is_active(self, timeout=2):
         """
@@ -45,6 +49,21 @@ class PyDrill(object):
                 "queryType": "SQL",
                 "query": sql
             },
+            'params': {
+                'request_timeout': timeout
+            }
+        })
+
+        return result
+
+    def metrics(self, timeout=10):
+        """
+        :param sql: string
+        :return: pydrill.client.ResultQuery
+        """
+        result = self.perform_metric_request(**{
+            'method': 'GET',
+            'url': '/stats.json',
             'params': {
                 'request_timeout': timeout
             }
