@@ -2,8 +2,8 @@
 
 from pydrill.transport import Transport
 from pydrill.client.result import ResultQuery
-from pydrill.exceptions import QueryError
 from pydrill.connection.requests_conn import RequestsHttpConnection
+from pydrill.exceptions import QueryError, ConnectionError, TransportError
 
 
 class PyDrill(object):
@@ -25,9 +25,16 @@ class PyDrill(object):
         """
         Returns True if the Drill is up, False otherwise.
         """
-        result = self.perform_request('HEAD', '/', params={'request_timeout': timeout})
+        try:
+            result = self.perform_request('HEAD', '/', params={'request_timeout': timeout})
+        except ConnectionError:
+            return False
+        except TransportError:
+            return False
+
         if result.response.status_code == 200:
             return True
+
         return False
 
     def query(self, sql, timeout=10):

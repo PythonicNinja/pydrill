@@ -62,10 +62,13 @@ class RequestsHttpConnection(Connection):
         if params:
             url = '%s?%s' % (url, urlencode(params or {}))
 
+        if timeout is None:
+            timeout = self.timeout
+
         start = time.time()
         try:
             response = self.session.request(method, url, data=body, headers={'Content-Type': 'application/json'},
-                                            timeout=timeout or self.timeout)
+                                            timeout=timeout)
             duration = time.time() - start
             raw_data = response.text
         except requests.exceptions.SSLError as e:
