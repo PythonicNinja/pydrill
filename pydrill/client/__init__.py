@@ -21,6 +21,9 @@ class PyDrill(object):
     def perform_request(self, method, url, params=None, body=None):
         return ResultQuery(*self.transport.perform_request(method, url, params, body))
 
+    def perform_metric_request(self, method, url, params=None, body=None):
+        return ResultQuery(*self.transport.perform_request(method, url, params, body), metric=True)
+
     def is_active(self, timeout=2):
         """
         Returns True if the Drill is up, False otherwise.
@@ -52,6 +55,20 @@ class PyDrill(object):
                 "queryType": "SQL",
                 "query": sql
             },
+            'params': {
+                'request_timeout': timeout
+            }
+        })
+
+        return result
+
+    def metrics(self, timeout=10):
+        """
+        :return: pydrill.client.ResultQuery
+        """
+        result = self.perform_metric_request(**{
+            'method': 'GET',
+            'url': '/stats.json',
             'params': {
                 'request_timeout': timeout
             }
