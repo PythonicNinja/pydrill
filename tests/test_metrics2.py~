@@ -38,9 +38,9 @@ class TestPydrill(unittest.TestCase):
 
         assert result.response.status_code == 200
         assert result.data == expected_result
-        assert len( result.data ) == 6
-        assert result.number_of_drill_bits >= 1
-        assert isinstance( result.max_direct_memory, int )
+		assert len( result.data ) == 6
+		assert result.number_of_drill_bits >= 1
+		assert isinstance( result.max_direct_memory, int )
 		
     # TODO: create more tests with other queries.
 

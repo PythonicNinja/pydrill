@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+test_pydrill_setup
+----------------------------------
+
+Tests for `pydrill` metrics function.
+Related to setup of :class:~`pydrill.PyDrill`.
+"""
+
+import unittest
+import responses
+import requests
+from pydrill.client import PyDrill
+
+class TestPydrill(unittest.TestCase):
+	
+	def setUp(self):
+		self.drill = PyDrill(host='localhost', port=8047)
+
+	def test_transport_host(self):
+		assert self.drill.transport.host == 'localhost'
+
+	def test_transport_port(self):
+		assert self.drill.transport.port == 8047
+
+	@responses.activate
+	def test_metrics(self):
+		#responses.add(**{'method': responses.POST,'url': 'http://localhost:8047/stats.json', 'body': "[{'name': 'Number of Drill Bits', 'value': 1}, {'name': 'Bit #0', 'value': 'osboxes initialized'}, {'name': 'Data Port Address', 'value': 'osboxes:31012'}, {'name': 'User Port Address', 'value': 'osboxes:31010'}, {'name': 'Control Port Address', 'value': 'osboxes:31011'}, {'name': 'Maximum Direct Memory', 'value': 8589934592}]", 'status': 200,'content_type': 'application/json','json': {}, }) 
+		responses.add(responses.POST, 'http://localhost:8047/stats.json',
+                  body="[{'name': 'Number of Drill Bits', 'value': 1}, {'name': 'Bit #0', 'value': 'osboxes initialized'}, {'name': 'Data Port Address', 'value': 'osboxes:31012'}, {'name': 'User Port Address', 'value': 'osboxes:31010'}, {'name': 'Control Port Address', 'value': 'osboxes:31011'}, {'name': 'Maximum Direct Memory', 'value': 8589934592}]", status=200,
+                  content_type='application/json')
+
+		metrics = self.drill.metrics()
+		'''
+		assert len( metrics.data ) == 6
+		assert metrics.number_of_drill_bits >= 1
+		assert isinstance( metrics.max_direct_memory, int )
+'''
+
+if __name__ == '__main__':
+	import sys
+	sys.exit(unittest.main())
+
