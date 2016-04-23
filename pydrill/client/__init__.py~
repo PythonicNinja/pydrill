@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import os
 from pydrill.transport import Transport
 from pydrill.client.result import ResultQuery
+from pydrill.exceptions import QueryError
 from pydrill.connection.requests_conn import RequestsHttpConnection
-from pydrill.exceptions import QueryError, ConnectionError, TransportError
 
 
 class PyDrill(object):
@@ -15,31 +14,20 @@ class PyDrill(object):
     """
     # TODO: create better docs.
 
-    def __init__(self, host=os.environ.get('PYDRILL_HOST', 'localhost'), port=os.environ.get('PYDRILL_PORT', 8047),
-                 trasport_class=Transport, connection_class=RequestsHttpConnection, **kwargs):
+    def __init__(self, host='localhost', port=8047, trasport_class=Transport, connection_class=RequestsHttpConnection, **kwargs):
 
-        self.transport = trasport_class(host, port, connection_class=connection_class, **kwargs)
+        self.transport = Transport(host, port, connection_class=connection_class, **kwargs)
 
     def perform_request(self, method, url, params=None, body=None):
         return ResultQuery(*self.transport.perform_request(method, url, params, body))
-
-    def perform_metric_request(self, method, url, params=None, body=None):
-        return ResultQuery(*self.transport.perform_request(method, url, params, body), metric=True)
 
     def is_active(self, timeout=2):
         """
         Returns True if the Drill is up, False otherwise.
         """
-        try:
-            result = self.perform_request('HEAD', '/', params={'request_timeout': timeout})
-        except ConnectionError:
-            return False
-        except TransportError:
-            return False
-
+        result = self.perform_request('HEAD', '/', params={'request_timeout': timeout})
         if result.response.status_code == 200:
             return True
-
         return False
 
     def query(self, sql, timeout=10):
@@ -64,20 +52,6 @@ class PyDrill(object):
 
         return result
 
-    def metrics(self, timeout=10):
-        """
-        :return: pydrill.client.ResultQuery
-        """
-        result = self.perform_metric_request(**{
-            'method': 'GET',
-            'url': '/stats.json',
-            'params': {
-                'request_timeout': timeout
-            }
-        })
-
-        return result
-
     def plan(self, sql):
         """
         :param sql: string
@@ -85,4 +59,3 @@ class PyDrill(object):
         """
         sql = 'explain plan for ' + sql
         return self.query(sql)
-
