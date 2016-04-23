@@ -9,8 +9,8 @@ import uuid
 from datetime import date, datetime
 from decimal import Decimal
 
-from .exceptions import SerializationError, ImproperlyConfigured
 from .compat import string_types
+from .exceptions import ImproperlyConfigured, SerializationError
 
 
 class TextSerializer(object):

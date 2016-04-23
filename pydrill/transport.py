@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 
-from pydrill.serializer import JSONSerializer, Deserializer
-from pydrill.exceptions import TransportError, ConnectionTimeout, ConnectionError
+from pydrill.exceptions import ConnectionError, ConnectionTimeout, TransportError
+from pydrill.serializer import Deserializer, JSONSerializer
 
 
 class Transport(object):

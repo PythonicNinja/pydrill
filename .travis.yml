@@ -2,6 +2,9 @@
 # This file will be regenerated if you run travis_pypi_setup.py
 
 language: python
+sudo: required
+services:
+  - docker
 addons:
   apt:
     sources:
@@ -15,6 +18,8 @@ install:
   - pip install -U tox
   - pip install coveralls
 env:
+  - TOXENV=check-isort
+  - TOXENV=check-flake8
   - TOXENV=py35
   - TOXENV=py34
   - TOXENV=py33
@@ -22,7 +27,9 @@ env:
   - TOXENV=py26
   - TOXENV=pypy
 
-# command to run tests, e.g. python setup.py test
+before_script:
+  - "source ./run_docker.sh"
+
 script:
   - tox
 

@@ -3,17 +3,16 @@
 import time
 import warnings
 
+from ..compat import string_types, urlencode
+from ..exceptions import ConnectionError, ConnectionTimeout, ImproperlyConfigured, SSLError
+from .base import Connection
+
 try:
     import requests
 
     REQUESTS_AVAILABLE = True
 except ImportError:
     REQUESTS_AVAILABLE = False
-
-from .base import Connection
-
-from ..exceptions import ConnectionError, ImproperlyConfigured, ConnectionTimeout, SSLError
-from ..compat import urlencode, string_types
 
 
 class RequestsHttpConnection(Connection):
@@ -43,7 +42,7 @@ class RequestsHttpConnection(Connection):
             elif isinstance(http_auth, string_types):
                 http_auth = tuple(http_auth.split(':', 1))
             self.session.auth = http_auth
-        self.base_url = 'http%s://%s:%d%s' % (
+        self.base_url = 'http%s://%s:%s%s' % (
             's' if use_ssl else '',
             host, port, self.url_prefix
         )

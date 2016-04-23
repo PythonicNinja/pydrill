@@ -18,13 +18,7 @@ requirements = [
     'requests',
 ]
 
-test_requirements = [
-    'responses',
-    'pytest',
-    'coverage',
-    'responses',
-    'coverage',
-]
+test_requirements = open('requriements_testing.txt', 'r').readlines()
 
 setup(
     name='pydrill',

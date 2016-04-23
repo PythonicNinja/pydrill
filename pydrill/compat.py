@@ -6,10 +6,10 @@ PY2 = sys.version_info[0] == 2
 
 if PY2:
     string_types = basestring,
-    from urllib import quote_plus, urlencode
-    from urlparse import urlparse
+    from urllib import quote_plus, urlencode  # noqa
+    from urlparse import urlparse  # noqa
     from itertools import imap as map
 else:
     string_types = str, bytes
-    from urllib.parse import quote_plus, urlencode, urlparse
+    from urllib.parse import quote_plus, urlencode, urlparse  # noqa
     map = map
