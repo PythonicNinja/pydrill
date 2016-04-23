@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 from pydrill.transport import Transport
 from pydrill.client.result import ResultQuery
 from pydrill.connection.requests_conn import RequestsHttpConnection
@@ -14,9 +15,10 @@ class PyDrill(object):
     """
     # TODO: create better docs.
 
-    def __init__(self, host='localhost', port=8047, trasport_class=Transport, connection_class=RequestsHttpConnection, **kwargs):
+    def __init__(self, host=os.environ.get('PYDRILL_HOST', 'localhost'), port=os.environ.get('PYDRILL_PORT', 8047),
+                 trasport_class=Transport, connection_class=RequestsHttpConnection, **kwargs):
 
-        self.transport = Transport(host, port, connection_class=connection_class, **kwargs)
+        self.transport = trasport_class(host, port, connection_class=connection_class, **kwargs)
 
     def perform_request(self, method, url, params=None, body=None):
         return ResultQuery(*self.transport.perform_request(method, url, params, body))

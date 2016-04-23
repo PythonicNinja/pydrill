@@ -3,17 +3,16 @@
 import time
 import warnings
 
+from ..compat import string_types, urlencode
+from ..exceptions import ConnectionError, ConnectionTimeout, ImproperlyConfigured, SSLError
+from .base import Connection
+
 try:
     import requests
 
     REQUESTS_AVAILABLE = True
 except ImportError:
     REQUESTS_AVAILABLE = False
-
-from .base import Connection
-
-from ..exceptions import ConnectionError, ImproperlyConfigured, ConnectionTimeout, SSLError
-from ..compat import urlencode, string_types
 
 
 class RequestsHttpConnection(Connection):

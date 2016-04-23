@@ -2,12 +2,13 @@
 
 import logging
 
+from ..exceptions import HTTP_EXCEPTIONS, TransportError
+
 try:
     import simplejson as json
 except ImportError:
     import json
 
-from ..exceptions import TransportError, HTTP_EXCEPTIONS
 
 logger = logging.getLogger('pydrill')
 
@@ -74,7 +75,8 @@ class Connection(object):
         if tracer.isEnabledFor(logging.INFO):
             if self.url_prefix:
                 path = path.replace(self.url_prefix, '', 1)
-            tracer.info("curl -X%s 'http://localhost:8047%s' -d '%s'", method, path, self._pretty_json(body) if body else '')
+            tracer.info("curl -X%s 'http://localhost:8047%s' -d '%s'", method, path,
+                        self._pretty_json(body) if body else '')
 
         if tracer.isEnabledFor(logging.DEBUG):
             tracer.debug('#[%s] (%.3fs)\n#%s', status_code, duration,
