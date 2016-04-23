@@ -28,7 +28,7 @@ env:
   - TOXENV=pypy
 
 before_script:
-  - "./run_docker.sh"
+  - "source ./run_docker.sh"
 
 script:
   - tox
