@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 
 exists()
 {
@@ -29,7 +28,7 @@ if exists docker-machine; then
     PYDRILL_PORT=8047
 else
     echo "You don't use docker-machine"
-    PYDRILL_HOST=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${CID})
+    PYDRILL_HOST='localhost'
     PYDRILL_PORT=8047
 fi
 
