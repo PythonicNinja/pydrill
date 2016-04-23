@@ -28,7 +28,7 @@ env:
   - TOXENV=pypy
 
 script:
-  - run_docker.sh
+  - bash -ex .run_docker.sh
   - tox
 
 after_success:
