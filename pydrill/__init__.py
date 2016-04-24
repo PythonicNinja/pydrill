@@ -1,8 +1,10 @@
 import sys
 
-VERSION = (0, 0, 0, 'dev')
+version = '0.0.1'
+
+VERSION = tuple(map(int, version.split('.')))
 __version__ = VERSION
-__versionstr__ = '.'.join(map(str, VERSION))
+__versionstr__ = version
 
 
 if (2, 7) <= sys.version_info < (3, 2):

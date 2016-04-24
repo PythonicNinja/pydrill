@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+from pydrill.exceptions import ImproperlyConfigured
+
+try:
+    import pandas as pd
+
+    PANDAS_AVAILABLE = True
+except ImportError:
+    PANDAS_AVAILABLE = False
 
 
 class Result(object):
@@ -22,6 +30,11 @@ class ResultQuery(Result):
     def __iter__(self):
         for row in self.rows:
             yield row
+
+    def to_dataframe(self):
+        if not PANDAS_AVAILABLE:
+            raise ImproperlyConfigured("Please install pandas to use ResultQuery.to_dataframe().")
+        return pd.DataFrame.from_dict(self.rows)
 
 
 class Drillbit(object):
