@@ -31,7 +31,13 @@ Installation
 ------------
 ::
 
-    pip install git+git://github.com/PythonicNinja/pydrill.git
+Version from https://pypi.python.org/pypi/pydrill::
+
+    $ pip install pydrill
+
+Latest version from git::
+
+    $ pip install git+git://github.com/PythonicNinja/pydrill.git
 
 Sample usage
 ------------
@@ -58,4 +64,3 @@ Sample usage
 
     df = yelp_reviews.to_dataframe()
     print(df[df['stars'] > 3])
-
