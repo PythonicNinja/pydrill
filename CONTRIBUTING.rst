@@ -78,9 +78,15 @@ Ready to contribute? Here's how to set up `pydrill` for local development.
 
 5. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox::
 
-    $ flake8 pydrill tests
-    $ python setup.py test
-    $ tox
+    $ source ./run_docker (it will export PYDRILL_HOST and PYDRILL_PORT)
+    or
+    $ export PYDRILL_HOST='127.0.0.1'
+    $ export PYDRILL_PORT='8047'
+    $ tox -e run-isort  # it will update imports
+    $ tox -e check-isort  # it will check if imports are correct
+    $ tox -e check-flake8 # it will check quality by flake8
+    $ tox -e py27  # run tests with py27
+    $ tox  # run all
 
    To get flake8 and tox, just pip install them into your virtualenv.
 
@@ -110,4 +116,4 @@ Tips
 
 To run a subset of tests::
 
-    $ python -m unittest tests.test_pydrill
+    $ tox -e py27 -- -k threads # it will only run tests which have key threads in name

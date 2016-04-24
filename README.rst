@@ -55,4 +55,6 @@ Sample usage
 
 Supported api calls
 -------------------
-::
+.. autoclass:: pydrill.client.PyDrill
+    :members:
+    :undoc-members:
