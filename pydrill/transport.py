@@ -93,7 +93,7 @@ class Transport(object):
                     raise
             else:
                 if data:
-                    data = self.deserializer.loads(data)
+                    data = self.deserializer.loads(data, mimetype=response.headers.get('Content-Type'))
                 else:
                     data = {}
                 return response, data, duration
