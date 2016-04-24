@@ -30,9 +30,6 @@ class Drillbit(object):
         self.address = address
         self.status = status
 
-    def __repr__(self):
-        return u"#{} - {} ({})".format(self.id, self.address, self.status)
-
 
 class Stats(Result):
     def __init__(self, response, data, duration, *args, **kwargs):

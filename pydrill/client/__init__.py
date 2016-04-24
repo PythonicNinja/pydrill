@@ -164,7 +164,7 @@ class PyDrill(object):
         """
         result = Result(*self.perform_request(**{
             'method': 'GET',
-            'url': '/storage/{}.json'.format(name),
+            'url': '/storage/{0}.json'.format(name),
             'params': {
                 'request_timeout': timeout
             }
@@ -183,7 +183,7 @@ class PyDrill(object):
         value = 'true' if value else 'false'
         result = Result(*self.perform_request(**{
             'method': 'GET',
-            'url': '/storage/{}/enable/{}'.format(name, value),
+            'url': '/storage/{0}/enable/{1}'.format(name, value),
             'params': {
                 'request_timeout': timeout
             }
@@ -195,13 +195,14 @@ class PyDrill(object):
         Create or update a storage plugin configuration.
 
         :param name: The name of the storage plugin configuration to create or update.
-        :param config: Overwrites the existing configuration if there is any, and therefore, must include all required attributes and definitions.
+        :param config: Overwrites the existing configuration if there is any, and therefore, must include all
+        required attributes and definitions.
         :param timeout: int
         :return: pydrill.client.Result
         """
         result = Result(*self.perform_request(**{
             'method': 'POST',
-            'url': '/storage/{}.json'.format(name),
+            'url': '/storage/{0}.json'.format(name),
             'body': config,
             'params': {
                 'request_timeout': timeout
@@ -219,7 +220,7 @@ class PyDrill(object):
         """
         result = Result(*self.perform_request(**{
             'method': 'DELETE',
-            'url': '/storage/{}.json'.format(name),
+            'url': '/storage/{0}.json'.format(name),
             'params': {
                 'request_timeout': timeout
             }
