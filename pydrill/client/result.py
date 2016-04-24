@@ -53,3 +53,10 @@ class Stats(Result):
                 self.control_port_address = value
             elif name == 'Maximum Direct Memory':
                 self.max_direct_memory = value
+
+
+class Profiles(Result):
+    def __init__(self, response, data, duration, *args, **kwargs):
+        super(Profiles, self).__init__(response, data, duration, *args, **kwargs)
+        self.running_queries = data.get('runningQueries')
+        self.finished_queries = data.get('finishedQueries')

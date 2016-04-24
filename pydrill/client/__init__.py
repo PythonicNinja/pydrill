@@ -2,7 +2,7 @@
 
 import os
 from pydrill.transport import Transport
-from pydrill.client.result import ResultQuery, Result, Stats
+from pydrill.client.result import ResultQuery, Result, Stats, Profiles
 from pydrill.connection.requests_conn import RequestsHttpConnection
 from pydrill.exceptions import QueryError, ConnectionError, TransportError
 
@@ -221,6 +221,56 @@ class PyDrill(object):
         result = Result(*self.perform_request(**{
             'method': 'DELETE',
             'url': '/storage/{0}.json'.format(name),
+            'params': {
+                'request_timeout': timeout
+            }
+        }))
+        return result
+
+    def profiles(self, timeout=10):
+        """
+        Get the profiles of running and completed queries.
+
+        :param timeout: int
+        :return: pydrill.client.Result
+        """
+        result = Profiles(*self.perform_request(**{
+            'method': 'GET',
+            'url': '/profiles.json',
+            'params': {
+                'request_timeout': timeout
+            }
+        }))
+        return result
+
+    def profile(self, query_id, timeout=10):
+        """
+        Get the profile of the query that has the given queryid.
+
+        :param query_id: The UUID of the query in standard UUID format that Drill assigns to each query.
+        :param timeout: int
+        :return: pydrill.client.Result
+        """
+        result = Result(*self.perform_request(**{
+            'method': 'GET',
+            'url': '/profiles/{0}.json'.format(query_id),
+            'params': {
+                'request_timeout': timeout
+            }
+        }))
+        return result
+
+    def profile_cancel(self, query_id, timeout=10):
+        """
+        Cancel the query that has the given queryid.
+
+        :param query_id: The UUID of the query in standard UUID format that Drill assigns to each query.
+        :param timeout: int
+        :return: pydrill.client.Result
+        """
+        result = Result(*self.perform_request(**{
+            'method': 'GET',
+            'url': '/profiles/cancel/{0}'.format(query_id),
             'params': {
                 'request_timeout': timeout
             }
