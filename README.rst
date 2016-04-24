@@ -53,8 +53,9 @@ Sample usage
     for result in yelp_reviews:
         print("%s: %s" %(result['type'], result['date']))
 
-Supported api calls
--------------------
-.. autoclass:: pydrill.client.PyDrill
-    :members:
-    :undoc-members:
+
+    # pandas dataframe
+
+    df = yelp_reviews.to_dataframe()
+    print(df[df['stars'] > 3])
+
