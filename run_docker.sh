@@ -14,14 +14,15 @@ fi
 
 screen -dm bash -c "./docker_drill_embedded.sh"
 
-
 CID=$(docker ps | grep apache-drill | cut -d ' ' -f 1)
-echo 'Docker cid' $CID
 while [ "$CID" == "" ];
 do
     CID=$(docker ps | grep apache-drill | cut -d ' ' -f 1)
+    echo $(docker ps)
+    sleep 0.25
 done
 
+echo 'Docker cid' $CID
 
 if exists docker-machine; then
     PYDRILL_HOST=$(docker-machine ip)
