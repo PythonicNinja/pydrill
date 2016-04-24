@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from pydrill.exceptions import QueryError
+import pytest
+from pydrill.exceptions import QueryError, ImproperlyConfigured
 
 
 def test_select_employee(pydrill_instance):
@@ -33,6 +33,16 @@ def test_select_iterator(pydrill_instance):
 
     for row in pydrill_instance.query(sql=sql):
         assert type(row) is dict
+
+
+def test_select_pandas(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
+    sql = "SELECT * FROM cp.`employee.json` ORDER BY salary DESC LIMIT 1"
+
+    with pytest.raises(ImproperlyConfigured):
+        df = pydrill_instance.query(sql=sql).to_dataframe()
 
 
 def test_select_without_sql(pydrill_instance):
