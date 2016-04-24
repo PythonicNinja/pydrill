@@ -13,6 +13,11 @@ addons:
       - python3.5
       - python3.5-dev
 
+before_install:
+  - docker ps -a
+  - "source ./run_docker.sh"
+  - docker ps -a
+
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
   - pip install -U tox
@@ -26,9 +31,6 @@ env:
   - TOXENV=py27
   - TOXENV=py26
   - TOXENV=pypy
-
-before_script:
-  - "source ./run_docker.sh"
 
 script:
   - tox
