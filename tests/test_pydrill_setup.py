@@ -6,19 +6,31 @@ from pydrill.exceptions import TransportError
 
 
 def test_transport_host(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     assert pydrill_instance.transport.host == os.environ.get('PYDRILL_HOST', 'localhost')
 
 
 def test_transport_port(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     assert pydrill_instance.transport.port == os.environ.get('PYDRILL_PORT', 8047)
 
 
 def test_is_active(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     assert pydrill_instance.is_active() == True
 
 
 @responses.activate
 def test_is_not_active_404(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     responses.add(**{
         'method': responses.HEAD,
         'url': 'http://localhost:8047/',
@@ -29,10 +41,13 @@ def test_is_not_active_404(pydrill_instance):
 
 
 @responses.activate
-def test_is_not_active_500(pydrill_instance):
+def test_is_not_active_500(pydrill_instance, pydrill_url):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     responses.add(**{
         'method': responses.HEAD,
-        'url': 'http://localhost:8047/',
+        'url': pydrill_url,
         'content_type': 'application/json',
         'status': 500,
     })
@@ -40,15 +55,25 @@ def test_is_not_active_500(pydrill_instance):
 
 
 @responses.activate
-def test_is_not_active_timeout(pydrill_instance):
+def test_is_not_active_201(pydrill_instance, pydrill_url):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     responses.add(**{
         'method': responses.HEAD,
-        'url': 'http://localhost:8047/',
+        'url': pydrill_url,
         'content_type': 'application/json',
-        'status': 500,
+        'status': 201,
     })
+    assert pydrill_instance.is_active() == False
+
+
+def test_is_not_active_timeout(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     try:
-        assert pydrill_instance.perform_request('HEAD', '/', params={'request_timeout': 0})
+        pydrill_instance.perform_request('HEAD', '/', params={'request_timeout': 0})
     except TransportError as e:
         assert e.status_code == e.args[0]
         assert e.error == e.args[1]

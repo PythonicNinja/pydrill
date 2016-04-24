@@ -4,7 +4,10 @@
 from pydrill.exceptions import QueryError
 
 
-def test_select_employee_mocked(pydrill_instance):
+def test_select_employee(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     sql = "SELECT * FROM cp.`employee.json` ORDER BY salary DESC LIMIT 1"
     expected_result = {'columns': ['birth_date', 'department_id', 'education_level', 'employee_id', 'first_name',
                                    'full_name', 'gender', 'hire_date', 'last_name', 'management_role', 'marital_status',
@@ -23,6 +26,9 @@ def test_select_employee_mocked(pydrill_instance):
 
 
 def test_select_iterator(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     sql = "SELECT * FROM cp.`employee.json` ORDER BY salary DESC LIMIT 1"
 
     for row in pydrill_instance.query(sql=sql):
@@ -30,10 +36,23 @@ def test_select_iterator(pydrill_instance):
 
 
 def test_select_without_sql(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
     sql = ""
     try:
         result = pydrill_instance.query(sql=sql)
     except QueryError as e:
         assert e
+
+
+def test_plan_for_select_employee(pydrill_instance):
+    """
+    :type pydrill_instance: pydrill.client.PyDrill
+    """
+    sql = "SELECT * FROM cp.`employee.json` ORDER BY salary DESC LIMIT 1"
+    result = pydrill_instance.plan(sql=sql)
+    assert result.response.status_code == 200
+
 
 # TODO: create more tests with other queries.
