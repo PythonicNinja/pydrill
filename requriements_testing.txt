@@ -2,3 +2,4 @@ requests
 responses
 pytest
 pytest-cov
+pytest-sugar
