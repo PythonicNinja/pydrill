@@ -14,11 +14,9 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-    'requests',
-]
+requirements = open('requirements_dev.txt', 'r').readlines()
 
-test_requirements = open('requriements_testing.txt', 'r').readlines()
+test_requirements = open('requirements_testing.txt', 'r').readlines()
 
 setup(
     name='pydrill',
