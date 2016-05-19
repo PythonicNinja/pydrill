@@ -5,8 +5,8 @@ pydrill
 .. image:: https://img.shields.io/travis/PythonicNinja/pydrill.svg
         :target: https://travis-ci.org/PythonicNinja/pydrill
 
-.. image:: https://img.shields.io/pypi/v/pydrill_dsl.svg
-        :target: https://pypi.python.org/pypi/pydrill_dsl
+.. image:: https://img.shields.io/pypi/v/pydrill.svg
+        :target: https://pypi.python.org/pypi/pydrill
 
 .. image:: https://readthedocs.org/projects/pydrill/badge/?version=latest
         :target: https://readthedocs.org/projects/pydrill/?badge=latest
