@@ -28,7 +28,6 @@ if exists docker-machine; then
     PYDRILL_HOST=$(docker-machine ip)
     PYDRILL_PORT=8047
 else
-    echo "You don't use docker-machine"
     PYDRILL_HOST='localhost'
     PYDRILL_PORT=8047
 fi
