@@ -2,6 +2,10 @@
 History
 =======
 
+0.1.1 (2016-05-21)
+------------------
+* Anaconda requirements fixed
+
 0.1.0 (2016-05-19)
 ------------------
 * First minor release
