@@ -14,7 +14,7 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = open('requirements_dev.txt', 'r').readlines()
+requirements = open('requirements_base.txt', 'r').readlines()
 
 test_requirements = open('requirements_testing.txt', 'r').readlines()
 
