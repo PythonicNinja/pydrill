@@ -66,8 +66,13 @@ class RequestsHttpConnection(Connection):
 
         start = time.time()
         try:
-            response = self.session.request(method, url, data=body, headers={'Content-Type': 'application/json'},
-                                            timeout=timeout)
+            response = self.session.request(
+                method, url,
+                data=body,
+                headers={'Content-Type': 'application/json'},
+                timeout=timeout,
+            )
+            response.encoding = 'UTF-8'
             duration = time.time() - start
             raw_data = response.text
         except requests.exceptions.SSLError as e:
