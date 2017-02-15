@@ -1,6 +1,6 @@
 import sys
 
-version = '0.2.0'
+version = '0.3.0'
 
 VERSION = tuple(map(int, version.split('.')))
 __version__ = VERSION
