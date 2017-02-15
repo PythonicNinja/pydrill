@@ -16,14 +16,14 @@ def test_transport_port(pydrill_instance):
     """
     :type pydrill_instance: pydrill.client.PyDrill
     """
-    assert pydrill_instance.transport.port == os.environ.get('PYDRILL_PORT', 8047)
+    assert pydrill_instance.transport.port is os.environ.get('PYDRILL_PORT', 8047)
 
 
 def test_is_active(pydrill_instance):
     """
     :type pydrill_instance: pydrill.client.PyDrill
     """
-    assert pydrill_instance.is_active() == True
+    assert pydrill_instance.is_active() is True
 
 
 @responses.activate
@@ -37,7 +37,7 @@ def test_is_not_active_404(pydrill_instance):
         'content_type': 'application/json',
         'status': 404,
     })
-    assert pydrill_instance.is_active() == False
+    assert pydrill_instance.is_active() is False
 
 
 @responses.activate
@@ -51,7 +51,7 @@ def test_is_not_active_500(pydrill_instance, pydrill_url):
         'content_type': 'application/json',
         'status': 500,
     })
-    assert pydrill_instance.is_active() == False
+    assert pydrill_instance.is_active() is False
 
 
 @responses.activate
@@ -65,7 +65,7 @@ def test_is_not_active_201(pydrill_instance, pydrill_url):
         'content_type': 'application/json',
         'status': 201,
     })
-    assert pydrill_instance.is_active() == False
+    assert pydrill_instance.is_active() is False
 
 
 def test_is_not_active_timeout(pydrill_instance):
@@ -73,7 +73,7 @@ def test_is_not_active_timeout(pydrill_instance):
     :type pydrill_instance: pydrill.client.PyDrill
     """
     try:
-        pydrill_instance.perform_request('HEAD', '/', params={'request_timeout': 0})
+        pydrill_instance.perform_request('HEAD', '/', params={'request_timeout': 0.00001})
     except TransportError as e:
         assert e.status_code == e.args[0]
         assert e.error == e.args[1]
