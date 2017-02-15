@@ -16,7 +16,7 @@ def test_transport_port(pydrill_instance):
     """
     :type pydrill_instance: pydrill.client.PyDrill
     """
-    assert pydrill_instance.transport.port is os.environ.get('PYDRILL_PORT', 8047)
+    assert pydrill_instance.transport.port == os.environ.get('PYDRILL_PORT', 8047)
 
 
 def test_is_active(pydrill_instance):
