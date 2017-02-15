@@ -2,6 +2,11 @@
 History
 =======
 
+0.3 (2017-02-15)
+----------------
+* requests response encoding (utf-8)
+* support Python 3.6 support
+
 0.1.1 (2016-05-21)
 ------------------
 * Anaconda requirements fixed

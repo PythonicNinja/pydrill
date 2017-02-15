@@ -20,7 +20,7 @@ test_requirements = open('requirements_testing.txt', 'r').readlines()
 
 setup(
     name='pydrill',
-    version='0.1.1',
+    version='0.3.0',
     description="Python Driver for Apache Drill.",
     long_description=readme + '\n\n' + history,
     author="Wojciech Nowak",
@@ -47,6 +47,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
     tests_require=test_requirements
