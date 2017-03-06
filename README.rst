@@ -30,6 +30,7 @@ Features
 * Support for all rest API calls inluding profiles/options/metrics `docs with full list <http://pydrill.readthedocs.io/en/latest/readme.html#supported-api-calls>`_.
 * Mapping Results to internal python types,
 * Compatibility with Pandas data frame,
+* Drill Authentication using PAM,
 
 Installation
 ------------
