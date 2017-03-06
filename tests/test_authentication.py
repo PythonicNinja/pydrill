@@ -11,7 +11,6 @@ def test_authentication_success(pydrill_url):
     responses.add(**{
         'method': responses.POST,
         'url': "{0}/{1}".format(pydrill_url, '/j_security_check'),
-        'content_type': 'application/json',
         'status': 200,
     })
 
