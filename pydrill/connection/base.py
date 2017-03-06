@@ -62,7 +62,7 @@ class Connection(object):
     def log_request_success(self, method, full_url, path, body, status_code, response, duration):
         """ Log a successful API call.  """
 
-        if body:
+        if body and not isinstance(body, dict):
             body = body.decode('utf-8')
 
         logger.info(
@@ -91,7 +91,7 @@ class Connection(object):
             status_code or 'N/A', duration, exc_info=exception is not None
         )
 
-        if body:
+        if body and not isinstance(body, dict):
             body = body.decode('utf-8')
 
         logger.debug('> %s', body)

@@ -13,6 +13,9 @@ You can also initialize via environment variables such as::
     PYDRILL_HOST
     PYDRILL_PORT
 
+You can use Drill PAM authentication via auth param::
+
+    drill = PyDrill(auth='drill_user:drill_password')
 
 
 To enable specific storage plugin you can::

@@ -16,9 +16,9 @@ class PyDrill(object):
     # TODO: create better docs.
 
     def __init__(self, host=os.environ.get('PYDRILL_HOST', 'localhost'), port=os.environ.get('PYDRILL_PORT', 8047),
-                 trasport_class=Transport, connection_class=RequestsHttpConnection, **kwargs):
+                 trasport_class=Transport, connection_class=RequestsHttpConnection, auth=None, **kwargs):
 
-        self.transport = trasport_class(host, port, connection_class=connection_class, **kwargs)
+        self.transport = trasport_class(host, port, connection_class=connection_class, auth=auth, **kwargs)
 
     def perform_request(self, method, url, params=None, body=None):
         return self.transport.perform_request(method, url, params, body)
