@@ -4,7 +4,7 @@ import time
 import warnings
 
 from ..compat import string_types, urlencode
-from ..exceptions import ConnectionError, ConnectionTimeout, ImproperlyConfigured, SSLError
+from ..exceptions import ConnectionError, ConnectionTimeout, ImproperlyConfigured, SSLError, SerializationError
 from .base import Connection
 
 try:
@@ -28,7 +28,7 @@ class RequestsHttpConnection(Connection):
         certificate
     """
 
-    def __init__(self, host='localhost', port=8047, http_auth=None,
+    def __init__(self, host='localhost', port=8047, auth=None,
                  use_ssl=False, verify_certs=False, ca_certs=None, client_cert=None,
                  **kwargs):
         if not REQUESTS_AVAILABLE:
@@ -36,12 +36,12 @@ class RequestsHttpConnection(Connection):
 
         super(RequestsHttpConnection, self).__init__(host=host, port=port, **kwargs)
         self.session = requests.session()
-        if http_auth is not None:
-            if isinstance(http_auth, (tuple, list)):
-                http_auth = tuple(http_auth)
-            elif isinstance(http_auth, string_types):
-                http_auth = tuple(http_auth.split(':', 1))
-            self.session.auth = http_auth
+        if auth is not None:
+            if isinstance(auth, (tuple, list)):
+                auth = tuple(auth)
+            elif isinstance(auth, string_types):
+                auth = tuple(auth.split(':', 1))
+            self.session.auth = auth
         self.base_url = 'http%s://%s:%s%s' % (
             's' if use_ssl else '',
             host, port, self.url_prefix
@@ -56,7 +56,18 @@ class RequestsHttpConnection(Connection):
         if use_ssl and not verify_certs:
             warnings.warn('Connecting to %s using SSL with verify_certs=False is insecure.' % self.base_url)
 
-    def perform_request(self, method, url, params=None, body=None, timeout=None, ignore=()):
+        if auth is not None:
+            try:
+                self.perform_request(
+                    method='POST',
+                    url='/j_security_check',
+                    body={'j_username': auth[0], 'j_password': auth[1]},
+                    headers={}
+                )
+            except SerializationError:
+                warnings.warn('Authentication failed using %s', auth)
+
+    def perform_request(self, method, url, params=None, body=None, timeout=None, ignore=(), headers=None):
         url = self.base_url + url
         if params:
             url = '%s?%s' % (url, urlencode(params or {}))
@@ -64,12 +75,15 @@ class RequestsHttpConnection(Connection):
         if timeout is None:
             timeout = self.timeout
 
+        if headers is None:
+            headers = {'Content-Type': 'application/json'}
+
         start = time.time()
         try:
             response = self.session.request(
                 method, url,
                 data=body,
-                headers={'Content-Type': 'application/json'},
+                headers=headers,
                 timeout=timeout,
             )
             response.encoding = 'UTF-8'
@@ -89,6 +103,11 @@ class RequestsHttpConnection(Connection):
         if not (200 <= response.status_code < 300) and response.status_code not in ignore:
             self.log_request_fail(method, url, body, duration, response.status_code)
             self._raise_error(response.status_code, raw_data)
+
+        if 'action="/j_security_check"' in raw_data:
+            self.log_request_fail(method, url, body, duration, response.status_code)
+            error_message = raw_data.split('<p style="color:red">')[1].split('</p>')[0]
+            self._raise_error(response.status_code, error_message)
 
         self.log_request_success(method, url, response.request.path_url, body, response.status_code, raw_data, duration)
 

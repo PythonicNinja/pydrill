@@ -2,6 +2,10 @@
 History
 =======
 
+0.3.1 (2017-03-06)
+------------------
+* Support for Drill Authentication using PAM
+
 0.3 (2017-02-15)
 ----------------
 * requests response encoding (utf-8)
