@@ -7,7 +7,6 @@ addons:
     - python3.6
     - python3.5
     - python3.5-dev
-    - pypy
     sources:
     - deadsnakes
 after_success:
@@ -25,32 +24,9 @@ env:
 - TOXENV=py33
 - TOXENV=py27
 - TOXENV=py26
-- TOXENV=pypy
 install:
 - pip install -U tox
 - pip install coveralls
 language: python
 script:
 - tox
-deploy:
-  user: PythonicNinja
-  true:
-    condition: $TOXENV == py27
-    repo: PythonicNinja/pydrill
-    tags: true
-  provider: pypi
-  password:
-    secure: !!binary |
-      Wk9KWk1kWkpsMW0vYnNGcXhvTzZZTjU2NEovZ3JjcUt4Tmh0czY3NzBLY011WnNnK1VRN3dTcGU4
-      eklnRTVzdnhKV00vQWZUaENHcmxob09TR0Z0SGNmK1l4YWFjQnhjVWVBcmdwMWlub25wWDZIU3Fw
-      eTB6NFZFY0FUQy9mYUpyMFZWNjYranVDZUtGNk9Sb2tYcUUvQWNkQWdMVTV5UGZPeDhUVVR1dXZ3
-      dWY4UlFpNlovaHpSREZNdTJ2QnhmUTdvbUlHZ2pCN0hNUFdJNEFDQmFjUUlSQ09Md1d4NitFdkJm
-      TW9JbkJ6d214a2xtSDU3NVBEODlueVIzcjVNUjVWdjkwdEQrRm5PU0dZMStLMWRMUVFDUFZRRDB6
-      ZkZ6OSt4TTdUMk1GOGw5MHVPb20rb1F6SXkwdmwrdTBoWldkUkZZcGxFNnN6LzRBWVRMRTRiaUlx
-      ZFo1QjVwaXNSSWE2bjRoNmozSmZhczh1VWtRV005dHc3YTk0NVV5OUsvQnh3T3E4Y3dzZTdKMFdQ
-      QlJKM0lRVlpIZlV1MDk1OGVHc1VJQ0JTRTAvbW5VNGVMajlWbkFTblNsQTk3c05MNHp3cUc4S0dU
-      MldwSUJSYXFXSkRjaFNMRHdBbmZNTDBqSFdDbU1zdFNtTzJqWGRobEdSRXdjTWIwNmtQR1R3Y2pr
-      SFltVE1uSjNXSnAwOHdTbEt6SmFEUmRKQWVQSjNPeDVzOCtCKzRNTDZ0cEFEOXdRZkt4WUFwekxr
-      aURoUmRsSjJ3ZVhaZG93eE95bEFvUXJjSndWZSs3V3ljd2VhV25kUkV6eVBRZGJndkhGM0hpQUEx
-      RHJ1WitYM3NWOXdXZ1hoMlBXejk1eEFnL1MrQVBMQWVmaEx5K0g2VDlTQlpLOGJCeG1CeFdqdmc9
-  distributions: sdist bdist_wheel
