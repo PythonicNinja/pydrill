@@ -31,10 +31,10 @@ class ResultQuery(Result):
         for row in self.rows:
             yield row
 
-    def to_dataframe(self):
+    def to_dataframe(self, dtype=None):
         if not PANDAS_AVAILABLE:
             raise ImproperlyConfigured("Please install pandas to use ResultQuery.to_dataframe().")
-        return pd.DataFrame.from_dict(self.rows)
+        return pd.DataFrame.from_dict(self.rows, dtype=dtype)
 
 
 class Drillbit(object):
