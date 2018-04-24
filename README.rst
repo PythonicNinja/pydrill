@@ -34,7 +34,6 @@ Features
 
 Installation
 ------------
-::
 
 Version from https://pypi.python.org/pypi/pydrill::
 
