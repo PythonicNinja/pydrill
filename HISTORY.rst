@@ -2,6 +2,10 @@
 History
 =======
 
+0.3.4 (2017-04-24)
+------------------
+* Updated pypi listing long_description
+
 0.3.3 (2017-04-24)
 ------------------
 * Fix pypi installation
