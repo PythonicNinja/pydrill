@@ -2,6 +2,14 @@
 History
 =======
 
+0.3.3 (2017-04-24)
+------------------
+* Fix pypi installation
+
+0.3.2 (2017-04-18)
+------------------
+* Support for dtype on to_dataframe
+
 0.3.1 (2017-03-06)
 ------------------
 * Support for Drill Authentication using PAM
