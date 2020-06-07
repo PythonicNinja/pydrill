@@ -59,9 +59,9 @@ class ResultQuery(Result):
 
         if dtype:
             # the user has specified a single dtype for the entire dataframe
-            return pd.DataFrame.from_dict(self.rows, dtype=dtype)
+            return pd.DataFrame.from_dict(self.rows, dtype=dtype)[self.columns]
 
-        df = pd.DataFrame.from_dict(self.rows)
+        df = pd.DataFrame.from_dict(self.rows)[self.columns]
 
         # The columns in df all have a dtype of object because Drill's HTTP API
         # always quotes the values in the JSON it returns, thereby providing
