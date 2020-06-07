@@ -1,5 +1,26 @@
 # -*- coding: utf-8 -*-
 from pydrill.exceptions import ImproperlyConfigured
+import logging
+import re
+
+logger = logging.getLogger('pydrill')
+
+drill_pandas_type_map = {
+        'BIGINT': 'int64',
+        'BINARY': 'object',
+        'BIT':  'boolean',
+        'DATE': 'datetime64',
+        'FLOAT4': 'float32',
+        'FLOAT8': 'float64',
+        'INT': 'int32',
+        'INTERVALDAY': 'object',
+        'INTERVALYEAR': 'object',
+        'SMALLINT': 'int32',
+        'TIME': 'timedelta64',
+        'TIMESTAMP': 'datetime64',
+        'VARDECIMAL': 'object',
+        'VARCHAR' : 'string'
+        }
 
 try:
     import pandas as pd
@@ -26,6 +47,7 @@ class ResultQuery(Result):
         super(ResultQuery, self).__init__(response, data, duration, *args, **kwargs)
         self.rows = data.get('rows', [])
         self.columns = data.get('columns', [])
+        self.metadata = data.get('metadata', [])
 
     def __iter__(self):
         for row in self.rows:
@@ -34,7 +56,33 @@ class ResultQuery(Result):
     def to_dataframe(self, dtype=None):
         if not PANDAS_AVAILABLE:
             raise ImproperlyConfigured("Please install pandas to use ResultQuery.to_dataframe().")
-        return pd.DataFrame.from_dict(self.rows, dtype=dtype)
+
+        if dtype:
+            # the user has specified a single dtype for the entire dataframe
+            return pd.DataFrame.from_dict(self.rows, dtype=dtype)
+
+        df = pd.DataFrame.from_dict(self.rows)
+
+        # The columns in df all have a dtype of object because Drill's HTTP API
+        # always quotes the values in the JSON it returns, thereby providing
+        # DataFrame.from_dict(...) with a dict of strings.  We now use the
+        # metadata returned by Drill to correct this
+        for i in range(len(self.columns)):
+            # strip any precision information that might be in the metdata e.g. VARCHAR(10)
+            m = re.sub(r'\(.*\)', '', self.metadata[i])
+
+            if m in drill_pandas_type_map:
+                logger.debug("Mapping column {} of type {} to dtype {}".format(self.columns[i], self.metadata[i], drill_pandas_type_map[m]))
+                if m == 'BIT':
+                    df[self.columns[i]] = df[self.columns[i]] == 'true'
+                elif m == 'TIME': # m in ['TIME', 'INTERVAL']: # parsing of ISO-8601 intervals appears broken as of Pandas 1.0.3
+                    df[self.columns[i]] = pd.to_timedelta(df[self.columns[i]])
+                else:
+                    df[self.columns[i]] = df[self.columns[i]].astype(drill_pandas_type_map[m])
+            else:
+                logger.warn("Could not map Drill column {} of type {} to a Pandas dtype".format(self.columns[i], m))
+
+        return df
 
 
 class Drillbit(object):
