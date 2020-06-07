@@ -5,29 +5,28 @@ import re
 
 logger = logging.getLogger('pydrill')
 
-drill_pandas_type_map = {
-        'BIGINT': 'int64',
-        'BINARY': 'object',
-        'BIT':  'boolean',
-        'DATE': 'datetime64',
-        'FLOAT4': 'float32',
-        'FLOAT8': 'float64',
-        'INT': 'int32',
-        'INTERVALDAY': 'object',
-        'INTERVALYEAR': 'object',
-        'SMALLINT': 'int32',
-        'TIME': 'timedelta64',
-        'TIMESTAMP': 'datetime64',
-        'VARDECIMAL': 'object',
-        'VARCHAR' : 'string'
-        }
-
 try:
     import pandas as pd
-
     PANDAS_AVAILABLE = True
 except ImportError:
     PANDAS_AVAILABLE = False
+
+DRILL_PANDAS_TYPE_MAP = {
+        'BIGINT': 'int64',
+        'BINARY': 'object',
+        'BIT':  'boolean', # handled as a special case
+        'DATE': 'datetime64[ns]',
+        'FLOAT4': 'float32',
+        'FLOAT8': 'float64',
+        'INT': 'int32',
+        'INTERVALDAY': 'string' if pd.__version__ >= '1' else 'object',
+        'INTERVALYEAR': 'string' if pd.__version__ >= '1' else 'object',
+        'SMALLINT': 'int32',
+        'TIME': 'timedelta64[ns]', # handled as a special case
+        'TIMESTAMP': 'datetime64[ns]',
+        'VARDECIMAL': 'object',
+        'VARCHAR' : 'string' if pd.__version__ >= '1' else 'object'
+        } if PANDAS_AVAILABLE else None
 
 
 class Result(object):
@@ -71,14 +70,14 @@ class ResultQuery(Result):
             # strip any precision information that might be in the metdata e.g. VARCHAR(10)
             m = re.sub(r'\(.*\)', '', self.metadata[i])
 
-            if m in drill_pandas_type_map:
-                logger.debug("Mapping column {} of type {} to dtype {}".format(self.columns[i], self.metadata[i], drill_pandas_type_map[m]))
+            if m in DRILL_PANDAS_TYPE_MAP:
+                logger.debug("Mapping column {} of type {} to dtype {}".format(self.columns[i], self.metadata[i], DRILL_PANDAS_TYPE_MAP[m]))
                 if m == 'BIT':
                     df[self.columns[i]] = df[self.columns[i]] == 'true'
                 elif m == 'TIME': # m in ['TIME', 'INTERVAL']: # parsing of ISO-8601 intervals appears broken as of Pandas 1.0.3
                     df[self.columns[i]] = pd.to_timedelta(df[self.columns[i]])
                 else:
-                    df[self.columns[i]] = df[self.columns[i]].astype(drill_pandas_type_map[m])
+                    df[self.columns[i]] = df[self.columns[i]].astype(DRILL_PANDAS_TYPE_MAP[m])
             else:
                 logger.warn("Could not map Drill column {} of type {} to a Pandas dtype".format(self.columns[i], m))
 
