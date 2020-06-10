@@ -12,17 +12,17 @@ except ImportError:
     PANDAS_AVAILABLE = False
 
 DRILL_PANDAS_TYPE_MAP = {
-        'BIGINT': 'int64',
+        'BIGINT': 'Int64',
         'BINARY': 'object',
-        'BIT':  'boolean', # handled as a special case
+        'BIT':  'boolean',
         'DATE': 'datetime64[ns]',
         'FLOAT4': 'float32',
         'FLOAT8': 'float64',
-        'INT': 'int32',
+        'INT': 'Int32',
         'INTERVALDAY': 'string' if pd.__version__ >= '1' else 'object',
         'INTERVALYEAR': 'string' if pd.__version__ >= '1' else 'object',
-        'SMALLINT': 'int32',
-        'TIME': 'timedelta64[ns]', # handled as a special case
+        'SMALLINT': 'Int32',
+        'TIME': 'timedelta64[ns]',
         'TIMESTAMP': 'datetime64[ns]',
         'VARDECIMAL': 'object',
         'VARCHAR' : 'string' if pd.__version__ >= '1' else 'object'
@@ -38,7 +38,7 @@ class Result(object):
 
 class ResultQuery(Result):
     """
-    Class responsible for maintaining a information returned from Drill.
+    Class responsible for maintaining information returned from Drill.
 
     It is iterable.
     """
@@ -76,8 +76,10 @@ class ResultQuery(Result):
                     df[self.columns[i]] = df[self.columns[i]] == 'true'
                 elif m == 'TIME': # m in ['TIME', 'INTERVAL']: # parsing of ISO-8601 intervals appears broken as of Pandas 1.0.3
                     df[self.columns[i]] = pd.to_timedelta(df[self.columns[i]])
-                else:
-                    df[self.columns[i]] = df[self.columns[i]].astype(DRILL_PANDAS_TYPE_MAP[m])
+                elif m in ['BIGINT', 'FLOAT4', 'FLOAT8', 'INT', 'SMALLINT']:
+                    df[self.columns[i]] = pd.to_numeric(df[self.columns[i]])
+
+                df[self.columns[i]] = df[self.columns[i]].astype(DRILL_PANDAS_TYPE_MAP[m])
             else:
                 logger.warn("Could not map Drill column {} of type {} to a Pandas dtype".format(self.columns[i], m))
 
