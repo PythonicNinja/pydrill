@@ -14,7 +14,7 @@ except ImportError:
 DRILL_PANDAS_TYPE_MAP = {
         'BIGINT': 'Int64',
         'BINARY': 'object',
-        'BIT':  'boolean',
+        'BIT':  'bool',
         'DATE': 'datetime64[ns]',
         'FLOAT4': 'float32',
         'FLOAT8': 'float64',
@@ -67,21 +67,33 @@ class ResultQuery(Result):
         # DataFrame.from_dict(...) with a dict of strings.  We now use the
         # metadata returned by Drill to correct this
         for i in range(len(self.columns)):
+            col_name = self.columns[i]
             # strip any precision information that might be in the metdata e.g. VARCHAR(10)
-            m = re.sub(r'\(.*\)', '', self.metadata[i])
+            col_drill_type = re.sub(r'\(.*\)', '', self.metadata[i])
 
-            if m in DRILL_PANDAS_TYPE_MAP:
-                logger.debug("Mapping column {} of type {} to dtype {}".format(self.columns[i], self.metadata[i], DRILL_PANDAS_TYPE_MAP[m]))
-                if m == 'BIT':
-                    df[self.columns[i]] = df[self.columns[i]] == 'true'
-                elif m == 'TIME': # m in ['TIME', 'INTERVAL']: # parsing of ISO-8601 intervals appears broken as of Pandas 1.0.3
-                    df[self.columns[i]] = pd.to_timedelta(df[self.columns[i]])
-                elif m in ['BIGINT', 'FLOAT4', 'FLOAT8', 'INT', 'SMALLINT']:
-                    df[self.columns[i]] = pd.to_numeric(df[self.columns[i]])
-
-                df[self.columns[i]] = df[self.columns[i]].astype(DRILL_PANDAS_TYPE_MAP[m])
+            if col_drill_type not in DRILL_PANDAS_TYPE_MAP:
+                logger.warn('No known mapping of Drill column {} of type {} to a Pandas dtype'.format(col_name, m))
             else:
-                logger.warn("Could not map Drill column {} of type {} to a Pandas dtype".format(self.columns[i], m))
+                col_dtype = DRILL_PANDAS_TYPE_MAP[col_drill_type]
+                logger.debug('Mapping column {} of Drill type {} to dtype {}'.format(col_name, col_drill_type, col_dtype))
+
+                # Pandas < 1.0.0 cannot handle null ints so we sometimes cannot cast to an int dtype
+                can_cast = True
+
+                if col_name == 'BIT':
+                    df[col_name] = df[col_name] == 'true'
+                elif col_name == 'TIME': # col_name in ['TIME', 'INTERVAL']: # parsing of ISO-8601 intervals appears broken as of Pandas 1.0.3
+                    df[col_name] = pd.to_timedelta(df[col_name])
+                elif col_name in ['FLOAT4', 'FLOAT8']:
+                    df[col_name] = pd.to_numeric(df[col_name])
+                elif col_name in ['BIGINT', 'INT', 'SMALLINT']:
+                    df[col_name] = pd.to_numeric(df[col_name])
+                    if pd.__version__ < '1' and df[col_name].isnull().values.any():
+                        logger.warn('Column {} of Drill type {} contains nulls so cannot be converted to an integer dtype in Pandas < 1.0.0'.format(col_name, col_drill_type))
+                        can_cast = False
+
+                if can_cast:
+                    df[col_name] = df[col_name].astype(col_dtype)
 
         return df
 
