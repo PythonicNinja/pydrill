@@ -52,7 +52,7 @@ class ResultQuery(Result):
         for row in self.rows:
             yield row
 
-    def to_dataframe(self, dtype=None):
+    def to_dataframe(self, dtype=None, convert_dtypes=False):
         if not PANDAS_AVAILABLE:
             raise ImproperlyConfigured("Please install pandas to use ResultQuery.to_dataframe().")
 
@@ -61,6 +61,8 @@ class ResultQuery(Result):
             return pd.DataFrame.from_dict(self.rows, dtype=dtype)[self.columns]
 
         df = pd.DataFrame.from_dict(self.rows)[self.columns]
+
+        if not convert_dtypes: return df
 
         # The columns in df all have a dtype of object because Drill's HTTP API
         # always quotes the values in the JSON it returns, thereby providing
