@@ -82,13 +82,13 @@ class ResultQuery(Result):
                 # Pandas < 1.0.0 cannot handle null ints so we sometimes cannot cast to an int dtype
                 can_cast = True
 
-                if col_name == 'BIT':
+                if col_drill_type == 'BIT':
                     df[col_name] = df[col_name] == 'true'
-                elif col_name == 'TIME': # col_name in ['TIME', 'INTERVAL']: # parsing of ISO-8601 intervals appears broken as of Pandas 1.0.3
+                elif col_drill_type == 'TIME': # col_name in ['TIME', 'INTERVAL']: # parsing of ISO-8601 intervals appears broken as of Pandas 1.0.3
                     df[col_name] = pd.to_timedelta(df[col_name])
-                elif col_name in ['FLOAT4', 'FLOAT8']:
+                elif col_drill_type in ['FLOAT4', 'FLOAT8']:
                     df[col_name] = pd.to_numeric(df[col_name])
-                elif col_name in ['BIGINT', 'INT', 'SMALLINT']:
+                elif col_drill_type in ['BIGINT', 'INT', 'SMALLINT']:
                     df[col_name] = pd.to_numeric(df[col_name])
                     if pd.__version__ < '1' and df[col_name].isnull().values.any():
                         logger.warn('Column {} of Drill type {} contains nulls so cannot be converted to an integer dtype in Pandas < 1.0.0'.format(col_name, col_drill_type))
