@@ -52,9 +52,12 @@ class ResultQuery(Result):
         for row in self.rows:
             yield row
 
-    def to_dataframe(self, dtype=None, convert_dtypes=False):
+    def to_dataframe(self, dtype=None, convert_dtypes=False) -> pd.DataFrame:
         if not PANDAS_AVAILABLE:
             raise ImproperlyConfigured("Please install pandas to use ResultQuery.to_dataframe().")
+
+        if len(self.rows) == 0:
+            return pd.DataFrame(columns=self.columns)
 
         if dtype:
             # the user has specified a single dtype for the entire dataframe
