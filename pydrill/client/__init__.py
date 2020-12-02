@@ -15,15 +15,14 @@ class PyDrill(object):
     """
     # TODO: create better docs.
 
-    def __init__(self, host=os.environ.get('PYDRILL_HOST', 'localhost'), port=os.environ.get('PYDRILL_PORT', 8047),
-                 trasport_class=Transport, connection_class=RequestsHttpConnection, auth=None, **kwargs):
+    def __init__(self, host=os.environ.get('PYDRILL_HOST', 'localhost'), port=os.environ.get('PYDRILL_PORT', 8047), trasport_class=Transport, connection_class=RequestsHttpConnection, auth=None, **kwargs):
 
         self.transport = trasport_class(host, port, connection_class=connection_class, auth=auth, **kwargs)
 
     def perform_request(self, method, url, params=None, body=None):
         return self.transport.perform_request(method, url, params, body)
 
-    def is_active(self, timeout=2):
+    def is_active(self, timeout=2) -> bool:
         """
         :param timeout: int
         :return: boolean
@@ -40,7 +39,7 @@ class PyDrill(object):
 
         return False
 
-    def query(self, sql, timeout=10):
+    def query(self, sql, timeout=10) -> ResultQuery:
         """
         Submit a query and return results.
 
@@ -65,7 +64,7 @@ class PyDrill(object):
 
         return result
 
-    def plan(self, sql, timeout=10):
+    def plan(self, sql, timeout=10) -> ResultQuery:
         """
         :param sql: string
         :param timeout: int
@@ -74,7 +73,7 @@ class PyDrill(object):
         sql = 'explain plan for ' + sql
         return self.query(sql, timeout)
 
-    def stats(self, timeout=10):
+    def stats(self, timeout=10) -> Stats:
         """
         Get Drillbit information, such as ports numbers.
 
@@ -90,7 +89,7 @@ class PyDrill(object):
         }))
         return result
 
-    def metrics(self, timeout=10):
+    def metrics(self, timeout=10) -> Result:
         """
         Get the current memory metrics.
 
@@ -106,7 +105,7 @@ class PyDrill(object):
         }))
         return result
 
-    def threads(self, timeout=10):
+    def threads(self, timeout=10) -> Result:
         """
         Get the status of threads.
 
@@ -122,7 +121,7 @@ class PyDrill(object):
         }))
         return result
 
-    def options(self, timeout=10):
+    def options(self, timeout=10) -> Result:
         """
         List the name, default, and data type of the system and session options.
 
@@ -138,7 +137,7 @@ class PyDrill(object):
         }))
         return result
 
-    def storage(self, timeout=10):
+    def storage(self, timeout=10) -> Result:
         """
         Get the list of storage plugin names and configurations.
 
@@ -154,7 +153,7 @@ class PyDrill(object):
         }))
         return result
 
-    def storage_detail(self, name, timeout=10):
+    def storage_detail(self, name, timeout=10) -> Result:
         """
         Get the definition of the named storage plugin.
 
@@ -171,7 +170,7 @@ class PyDrill(object):
         }))
         return result
 
-    def storage_enable(self, name, value=True, timeout=10):
+    def storage_enable(self, name, value=True, timeout=10) -> Result:
         """
         Enable or disable the named storage plugin.
 
@@ -190,7 +189,7 @@ class PyDrill(object):
         }))
         return result
 
-    def storage_update(self, name, config, timeout=10):
+    def storage_update(self, name, config, timeout=10) -> Result:
         """
         Create or update a storage plugin configuration.
 
@@ -210,7 +209,7 @@ class PyDrill(object):
         }))
         return result
 
-    def storage_delete(self, name, timeout=10):
+    def storage_delete(self, name, timeout=10) -> Result:
         """
         Delete a storage plugin configuration.
 
@@ -227,7 +226,7 @@ class PyDrill(object):
         }))
         return result
 
-    def profiles(self, timeout=10):
+    def profiles(self, timeout=10) -> Result:
         """
         Get the profiles of running and completed queries.
 
@@ -243,7 +242,7 @@ class PyDrill(object):
         }))
         return result
 
-    def profile(self, query_id, timeout=10):
+    def profile(self, query_id, timeout=10) -> Result:
         """
         Get the profile of the query that has the given queryid.
 
@@ -260,7 +259,7 @@ class PyDrill(object):
         }))
         return result
 
-    def profile_cancel(self, query_id, timeout=10):
+    def profile_cancel(self, query_id, timeout=10) -> Result:
         """
         Cancel the query that has the given queryid.
 

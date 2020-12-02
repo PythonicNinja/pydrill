@@ -90,7 +90,8 @@ class ResultQuery(Result):
                 elif col_drill_type == 'TIME': # col_name in ['TIME', 'INTERVAL']: # parsing of ISO-8601 intervals appears broken as of Pandas 1.0.3
                     df[col_name] = pd.to_timedelta(df[col_name])
                 elif col_drill_type in ['FLOAT4', 'FLOAT8']:
-                    df[col_name] = pd.to_numeric(df[col_name])
+                    # coerce errors when float parsing to handle the case when Drill returns 'NaN'
+                    df[col_name] = pd.to_numeric(df[col_name], errors='coerce')
                 elif col_drill_type in ['BIGINT', 'INT', 'SMALLINT']:
                     df[col_name] = pd.to_numeric(df[col_name])
                     if pd.__version__ < '1' and df[col_name].isnull().values.any():

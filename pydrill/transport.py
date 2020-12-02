@@ -12,9 +12,20 @@ class Transport(object):
     Main interface is the `perform_request` method.
     """
 
-    def __init__(self, host, port, connection_class, serializers=None, default_mimetype='application/json',
-                 max_retries=3, retry_on_status=(503, 504,), serializer=JSONSerializer(), deserializer=Deserializer(),
-                 retry_on_timeout=False, send_get_body_as='GET', **kwargs):
+    def __init__(self,
+            host,
+            port,
+            connection_class,
+            serializers=None,
+            default_mimetype='application/json',
+            max_retries=3,
+            retry_on_status=(503, 504,),
+            serializer=JSONSerializer(),
+            deserializer=Deserializer(),
+            retry_on_timeout=False,
+            send_get_body_as='GET',
+            **kwargs):
+
         self.deserializer = deserializer
         self.port = port
         self.host = host
