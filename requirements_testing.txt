@@ -5,4 +5,4 @@ pytest-cov
 pytest-sugar
 flake8==2.4.1
 tox==2.1.1
-coverage==4.0
+coverage==5.5
