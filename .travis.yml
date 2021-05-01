@@ -18,12 +18,12 @@ before_install:
 env:
 - TOXENV=check-isort
 - TOXENV=check-flake8
-- TOXENV=py36
-- TOXENV=py35
-- TOXENV=py34
-- TOXENV=py33
-- TOXENV=py27
-- TOXENV=py26
+- TOXENV=python3.6
+- TOXENV=python3.5
+- TOXENV=python3.4
+- TOXENV=python3.3
+- TOXENV=python2.7
+- TOXENV=python2.6
 install:
 - pip install -U tox
 - pip install coveralls
