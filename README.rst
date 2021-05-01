@@ -12,8 +12,8 @@ pydrill
         :target: https://readthedocs.org/projects/pydrill/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://coveralls.io/repos/PythonicNinja/pydrill/badge.svg?branch=master&service=github
-  :target: https://coveralls.io/github/PythonicNinja/pydrill?branch=master
+.. image:: https://coveralls.io/repos/github/PythonicNinja/pydrill/badge.svg?branch=master
+        :target: https://coveralls.io/github/PythonicNinja/pydrill?branch=master
 
 
 Python Driver for `Apache Drill <https://drill.apache.org/>`_.
