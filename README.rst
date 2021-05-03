@@ -48,7 +48,8 @@ Sample usage
 ::
 
     from pydrill.client import PyDrill
-
+    from pydrill.exceptions import ImproperlyConfigured
+    
     drill = PyDrill(host='localhost', port=8047)
 
     if not drill.is_active():
