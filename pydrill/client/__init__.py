@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
+from threading import RLock
+
 from pydrill.transport import Transport
 from pydrill.client.result import ResultQuery, Result, Stats, Profiles
 from pydrill.connection.requests_conn import RequestsHttpConnection
@@ -15,10 +17,34 @@ class PyDrill(object):
     """
     # TODO: create better docs.
 
-    def __init__(self, host=os.environ.get('PYDRILL_HOST', 'localhost'), port=os.environ.get('PYDRILL_PORT', 8047),
-                 trasport_class=Transport, connection_class=RequestsHttpConnection, auth=None, **kwargs):
+    def __init__(self,
+                 host=os.environ.get('PYDRILL_HOST', 'localhost'),
+                 port=os.environ.get('PYDRILL_PORT', 8047),
+                 trasport_class=Transport,
+                 connection_class=RequestsHttpConnection,
+                 auth=None,
+                 **kwargs):
+        self.host = host
+        self.port = port
+        self.trasport_class = trasport_class
+        self.connection_class = connection_class
+        self.auth = auth
+        self.kwargs = kwargs
+        self.lock = RLock()
+        self._transport = None
 
-        self.transport = trasport_class(host, port, connection_class=connection_class, auth=auth, **kwargs)
+    @property
+    def transport(self):
+        # initiate transport lazily
+        if self._transport is None:
+            with self.lock:
+                if self._transport is None:
+                    self._transport = self.trasport_class(self.host, self.port,
+                                                          connection_class=self.connection_class,
+                                                          auth=self.auth,
+                                                          **self.kwargs)
+            self.lock = None
+        return self._transport
 
     def perform_request(self, method, url, params=None, body=None):
         return self.transport.perform_request(method, url, params, body)
