@@ -1,6 +1,6 @@
 -r requirements_base.txt
 bumpversion==0.5.3
-wheel==0.23.0
+wheel==0.38.1
 watchdog==0.8.3
 cryptography==3.3.2
 PyYAML==5.4
