@@ -2,7 +2,7 @@
 bumpversion==0.5.3
 wheel==0.23.0
 watchdog==0.8.3
-cryptography==3.3.2
+cryptography==39.0.1
 PyYAML==5.4
 -r requirements_testing.txt
 -r docs/requirements.txt
